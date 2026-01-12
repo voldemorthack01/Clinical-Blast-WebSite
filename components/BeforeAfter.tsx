@@ -11,6 +11,11 @@ export default function BeforeAfter() {
     const handleMove = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
         if (!isDragging && e.type !== 'click') return;
 
+        // Prevent scrolling on mobile while dragging
+        if ('touches' in e && e.cancelable) {
+            e.preventDefault();
+        }
+
         const container = e.currentTarget.getBoundingClientRect();
         let clientX: number;
 
@@ -51,12 +56,14 @@ export default function BeforeAfter() {
                     className="max-w-4xl mx-auto"
                 >
                     <div
-                        className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl cursor-ew-resize select-none"
+                        className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl cursor-ew-resize select-none touch-none"
                         onMouseMove={handleMove}
                         onTouchMove={handleMove}
                         onMouseDown={() => setIsDragging(true)}
                         onMouseUp={() => setIsDragging(false)}
                         onMouseLeave={() => setIsDragging(false)}
+                        onTouchStart={() => setIsDragging(true)}
+                        onTouchEnd={() => setIsDragging(false)}
                         onClick={handleMove}
                     >
                         {/* Before Image (Right Side) */}
